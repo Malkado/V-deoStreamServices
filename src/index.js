@@ -12,7 +12,7 @@ const firebaseConfig = {
     storageBucket: "desafio-e52bd.appspot.com",
     messagingSenderId: "1083628475861",
     appId: "1:1083628475861:web:90a0772587d30a8d04595c"
-  };
+};
 app.use(boyParser.json());
 
 
@@ -37,19 +37,29 @@ app.get('/api/resources/PrimaryApi', (req, res) => {
         'results': [{
             'data': list,
         }],
-        'statusCode': 200,
+        'statusCode': res.statusCode,
         'info': 'Função executada com sucesso!'
     };
     res.send(data);
 });
 
 app.get('/api/resources/Desafio', (req, res) => {
-    ref.once("value", function(snapshot) {
-        var data = snapshot.val();   //Data is in JSON format.
-        console.log(data);
-        res.send(data);
-      });
-    
+    try {
+        
+        res.header('Access-Control-Allow-Methods', 'GET');
+        ref.once("value", async function (snapshot) {
+            var data = snapshot.val();   //Data is in JSON format.
+            console.log(data);
+            
+            res.send(data);
+
+        });
+    } catch (error) {
+        console.error(error);
+
+    }
+
+
 });
 
 app.get('/api/resources', (req, res) => {
